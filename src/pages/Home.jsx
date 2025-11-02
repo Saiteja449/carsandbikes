@@ -1,115 +1,248 @@
-import React from "react";
-import { motion } from "framer-motion";
-import Header from "../components/Header";
+import React, { useEffect, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import bgCar from "../../assets/homeBanner.jpg";
 import ServicesSection from "../components/ServicesSection";
 import WhyChooseUs from "../components/WhyChooseUs";
 
-// Animation Controls
-const container = {
-  hidden: {},
+const containerVariants = {
+  hidden: { opacity: 0 },
   visible: {
+    opacity: 1,
     transition: {
-      staggerChildren: 0.18,
-      delayChildren: 0.1,
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
     },
   },
 };
 
-const child = {
-  hidden: { opacity: 0, x: -60 },
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    y: 60,
+    filter: "blur(10px)",
+  },
   visible: {
     opacity: 1,
-    x: 0,
+    y: 0,
+    filter: "blur(0px)",
     transition: {
-      duration: 0.9,
-      ease: [0.25, 0.1, 0.25, 1], // smooth
+      duration: 1.2,
+      ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+  hover: {
+    scale: 1.05,
+    boxShadow: "0 10px 30px -10px rgba(220, 38, 38, 0.5)",
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut",
+    },
+  },
+  tap: { scale: 0.95 },
 };
 
 const Home = () => {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.1]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
+
   return (
-    <>
-      <div
-        className=" w-full pt-28 pb-32       /* Mobile vertical padding */
-    sm:pt-32 sm:pb-32 /* Slightly more on tablets */
-    md:pt-36 md:pb-28  md:h-screen bg-no-repeat bg-coverbg-center md:bg-right-bottom flex items-center"
-        style={{ backgroundImage: `url(${bgCar})` }}
+    <div className="min-h-screen bg-black overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-red-500 rounded-full"
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0, 0.5, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      <motion.section
+        ref={heroRef}
+        style={{ opacity, scale }}
+        className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
       >
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${bgCar})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80"></div>
+        </div>
+
         <motion.div
-          className="
-      container mx-auto 
-      px-4 md:px-6
-      text-white space-y-4 md:space-y-6
-      flex flex-col justify-center
-    "
-          variants={container}
+          className="absolute top-20 right-20 w-4 h-4 bg-red-500 rounded-full"
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+          }}
+        />
+
+        <motion.div
+          className="absolute bottom-32 left-20 w-6 h-6 border-2 border-red-500 rounded-full"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.3, 0.7, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+          }}
+        />
+
+        <motion.div
+          className="container mx-auto px-4 md:px-6 relative z-10"
+          variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <motion.h1
-            variants={child}
-            className="
-        text-3xl sm:text-4xl md:text-6xl 
-        font-bold leading-tight
-      "
-          >
-            Drive Confidently with
-          </motion.h1>
-
-          <motion.h1
-            variants={child}
-            className="
-        text-3xl sm:text-4xl md:text-6xl 
-        font-bold leading-tight text-red-500
-      "
-          >
-            FixinMoto
-          </motion.h1>
-
-          <motion.p
-            variants={child}
-            className="
-        text-sm sm:text-base md:text-lg
-        text-gray-200
-        max-w-xs sm:max-w-md md:max-w-lg
-      "
-          >
-            Your car deserves the best care — precision, speed & reliability.
-            Book your appointment today!
-          </motion.p>
-
           <motion.div
-            variants={child}
-            className="
-        flex flex-col sm:flex-row 
-        gap-3 sm:gap-4 
-        mt-4
-      "
+            className="text-center lg:text-left max-w-4xl mx-auto lg:mx-0"
+            style={{ y }}
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="bg-red-600 px-6 py-3 rounded-lg font-semibold"
+            <motion.h1
+              variants={textVariants}
+              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-6"
             >
-              Appointment Now
-            </motion.button>
+              Drive{" "}
+              <motion.span
+                className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700"
+                whileInView={{
+                  backgroundPosition: ["0% 50%", "100% 50%"],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+                style={{
+                  backgroundSize: "200% 200%",
+                }}
+              >
+                Confidently
+              </motion.span>
+            </motion.h1>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="bg-white text-black px-6 py-3 rounded-lg font-semibold"
+            <motion.div
+              variants={textVariants}
+              className="flex flex-col lg:flex-row items-center justify-center lg:justify-start gap-4 mb-8"
             >
-              Our Services
-            </motion.button>
+              <div className="w-1 h-12 bg-red-500 hidden lg:block"></div>
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white">
+                with <span className="text-red-500">FixinMoto</span>
+              </h2>
+            </motion.div>
+
+            <motion.p
+              variants={textVariants}
+              className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-12 leading-relaxed"
+            >
+              Your car deserves the{" "}
+              <span className="text-red-400 font-semibold">best care</span> —
+              precision, speed & reliability. Book your appointment today!
+            </motion.p>
+
+            <motion.div
+              variants={textVariants}
+              className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start"
+            >
+              <motion.button
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+                className="relative px-12 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-lg rounded-xl overflow-hidden group"
+              >
+                <span className="relative z-10">Appointment Now</span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+
+              <motion.button
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+                className="px-12 py-4 border-2 border-red-600 text-white font-bold text-lg rounded-xl hover:bg-red-600 transition-colors duration-300"
+              >
+                Our Services
+              </motion.button>
+            </motion.div>
           </motion.div>
         </motion.div>
-      </div>
 
-      <>
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{
+            y: [0, 10, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        >
+          <div className="w-6 h-10 border-2 border-red-500 rounded-full flex justify-center">
+            <motion.div
+              className="w-1 h-3 bg-red-500 rounded-full mt-2"
+              animate={{
+                y: [0, 12, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
+          </div>
+        </motion.div>
+      </motion.section>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true }}
+      >
         <ServicesSection />
         <WhyChooseUs />
-      </>
-    </>
+      </motion.div>
+    </div>
   );
 };
 

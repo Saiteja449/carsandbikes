@@ -1,114 +1,838 @@
-import React from "react";
-import { motion } from "framer-motion";
-import Brakes from "../../assets/brakes.svg";
-import Oil from "../../assets/oil.svg";
-import Tires from "../../assets/tires.svg";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const parentVariant = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.12, // faster
-      delayChildren: 0.05, // less delay
+export const servicesData = {
+  car: [
+    {
+      category: "Car Mechanical Services & Works",
+      services: [
+        "Complete engine repair & tuning",
+        "Clutch, brake & suspension works",
+        "Gearbox service & replacement",
+        "Oil change & filter replacement",
+        "Electrical wiring & sensor diagnostics",
+        "Battery check & replacement",
+        "Cooling system & radiator service",
+        "Steering & wheel alignment",
+        "AC gas refilling & AC system repair",
+        "Fuel injector & throttle body cleaning",
+        "Timing belt & chain replacement",
+        "Noise & vibration issue diagnosis",
+        "Underbody inspection & protection coating",
+        "Rat repellent & rust coating",
+        "LED & high-illumination headlight installation",
+        "Car detailing, interior cleaning & polishing",
+        "Complete car restoration & performance upgrades",
+      ],
     },
-  },
+    {
+      category: "Car Interior Accessories & Works",
+      services: [
+        "Ambient light setup (single & multi-color)",
+        "Star roof lighting installation",
+        "Dashboard wrapping & interior styling",
+        "Premium seat cover & leather upholstery",
+        "Roof liner replacement & cleaning",
+        "Steering cover & custom wrapping",
+        "Floor lamination & 7D/9D mat fitting",
+        "Door pad restoration & leather finishing",
+        "Interior detailing & deep cleaning",
+        "Sound damping & noise cancellation works",
+        "Android touchscreen music system",
+        "Reverse camera & parking sensor fitting",
+        "Premium speaker & woofer installation",
+        "Armrest installation & cup holder setup",
+        "LED foot lights & mood lighting",
+        "Sunshade & window curtain fitting",
+        "Perfume diffuser & interior accessories setup",
+        "Custom interior modification & theme design",
+        "Side foot step installation (SUV & MUVs)",
+      ],
+    },
+    {
+      category: "Car Detailing & Restoration Services",
+      services: [
+        "Full body foam wash & deep cleaning",
+        "Exterior polishing & gloss enhancement",
+        "Interior deep cleaning & vacuuming",
+        "Dashboard, roof & seat restoration",
+        "Ceramic coating",
+        "Graphene coating (deep gloss & slickness)",
+        "Matte & gloss PPF installation (8-year warranty)",
+        "Headlight & taillight restoration",
+        "Underbody rust coating & protection",
+        "Engine bay cleaning & shine treatment",
+        "Plastic & rubber parts restoration",
+        "Paint correction & scratch removal",
+        "Full body denting & painting works",
+        "Alloy wheel cleaning & painting",
+        "Noise cancellation damping work",
+        "Car interior & exterior customization",
+        "Full car restoration to showroom finish",
+      ],
+    },
+  ],
+
+  bike: [
+    {
+      category: "Bike Mechanical Services",
+      services: [
+        "Complete engine repair & tuning",
+        "Clutch & brake overhaul",
+        "Oil change & filter replacement",
+        "Chain & sprocket replacement",
+        "Suspension repair & setup",
+        "Carburetor & fuel injection cleaning",
+        "Battery check & replacement",
+        "Electrical wiring & lighting works",
+        "Wheel alignment & balancing",
+        "Gearbox repair & maintenance",
+        "Cooling system check-up",
+        "Tyre replacement & puncture repair",
+        "Noise & vibration issue diagnosis",
+        "Full bike restoration & repainting",
+      ],
+    },
+    {
+      category: "Bike Restoration Services",
+      services: [
+        "Complete engine restoration & tuning",
+        "Full-body repainting & denting work",
+        "Chassis cleaning, repair & coating",
+        "Rust removal & anti-rust protection",
+        "Electrical wiring restoration",
+        "Suspension & brake system rebuild",
+        "Carburetor & fuel system cleaning",
+        "Clutch, gear & bearing replacement",
+        "Seat & interior re-upholstery",
+        "Alloy & wheel restoration",
+        "Headlight & indicator replacement",
+        "Chrome part polishing & renewal",
+        "Custom paint & graphic designs",
+        "Matte / Gloss PPF & ceramic coating",
+        "Final detailing & finishing touches",
+      ],
+    },
+    {
+      category: "Bike Detailing Services",
+      services: [
+        "Full-body foam wash & deep cleaning",
+        "Premium polishing & gloss enhancement",
+        "Ceramic coating",
+        "Matte & gloss PPF installation",
+        "Chain cleaning & lubrication",
+        "Engine bay cleaning & shine treatment",
+        "Plastic & rubber part restoration",
+        "Headlight & taillight restoration",
+        "Rust removal & metal protection",
+        "Underbody wash & protection coat",
+        "Water spot & swirl mark removal",
+        "Paint correction & scratch removal",
+        "Interior panel & seat cleaning",
+        "Bike waxing & UV protection",
+        "Chrome parts polishing & shine restore",
+      ],
+    },
+  ],
 };
 
-const cardVariant = {
-  hidden: { opacity: 0, y: 80, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 1,
-      ease: [0.2, 0.65, 0.3, 1], // buttery smooth
-    },
-  },
-};
+/* --------------------
+   Detailed SVG icons - WHITE COLOR
+   -------------------- */
+const SvgEngine = ({ className = "", style = {}, width = 76, height = 76 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect
+      x="6"
+      y="18"
+      width="52"
+      height="28"
+      rx="4"
+      stroke="none"
+      fill="rgba(255,255,255,0.9)"
+    />
+    <path
+      d="M10 30h44"
+      stroke="rgba(255,255,255,0.8)"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <circle cx="20" cy="30" r="3" fill="rgba(255,255,255,0.7)" />
+    <circle cx="44" cy="30" r="3" fill="rgba(255,255,255,0.7)" />
+  </svg>
+);
 
-const services = [
-  { id: "01", title: "Engine Repair & Maintenance", image: Brakes },
-  { id: "02", title: "Oil & Filter Changes", image: Oil },
-  { id: "03", title: "Brake Services", image: Brakes },
-  { id: "04", title: "Tire Care", image: Tires },
-];
+const SvgWrench = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M48 12L38 22"
+      stroke="rgba(255,255,255,0.8)"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+    <path
+      d="M36 24c-4 4-10 6-16 6s-8 2-8 6 2 8 6 8 6-2 6-6 2-8 6-8 8-2 12-6 8-8 8-8-6 0-8 0z"
+      fill="rgba(255,255,255,0.9)"
+    />
+  </svg>
+);
+
+const SvgOil = ({ className = "", style = {}, width = 68, height = 68 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M32 8c-6 8-12 12-12 20 0 8 6 14 12 14s12-6 12-14c0-8-6-12-12-20z"
+      fill="rgba(255,255,255,0.9)"
+    />
+    <rect
+      x="26"
+      y="36"
+      width="12"
+      height="12"
+      rx="2"
+      fill="rgba(255,255,255,0.7)"
+    />
+  </svg>
+);
+
+const SvgBattery = ({
+  className = "",
+  style = {},
+  width = 64,
+  height = 64,
+}) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect
+      x="10"
+      y="18"
+      width="44"
+      height="28"
+      rx="3"
+      fill="rgba(255,255,255,0.9)"
+    />
+    <rect
+      x="54"
+      y="26"
+      width="4"
+      height="12"
+      rx="1"
+      fill="rgba(255,255,255,0.8)"
+    />
+    <path d="M18 34h12v6H18z" fill="rgba(255,255,255,0.7)" />
+  </svg>
+);
+
+const SvgTyre = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <circle cx="32" cy="32" r="18" fill="rgba(255,255,255,0.7)" />
+    <circle cx="32" cy="32" r="8" fill="rgba(255,255,255,0.9)" />
+  </svg>
+);
+
+const SvgAC = ({ className = "", style = {}, width = 68, height = 68 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect
+      x="14"
+      y="20"
+      width="36"
+      height="24"
+      rx="3"
+      fill="rgba(255,255,255,0.7)"
+    />
+    <path
+      d="M20 32h24"
+      stroke="rgba(255,255,255,0.8)"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const SvgDetail = ({ className = "", style = {}, width = 76, height = 76 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <circle cx="32" cy="32" r="18" fill="rgba(255,255,255,0.6)" />
+    <path
+      d="M24 28h16M24 36h10"
+      stroke="rgba(255,255,255,0.8)"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const SvgPaint = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    className={className}
+    style={style}
+    width={width}
+    height={height}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M16 44c0-10 24-24 32-28 0 0 0 12-8 20s-24 12-24 8z"
+      fill="rgba(255,255,255,0.9)"
+    />
+    <rect
+      x="10"
+      y="48"
+      width="44"
+      height="6"
+      rx="2"
+      fill="rgba(255,255,255,0.7)"
+    />
+  </svg>
+);
+
+const SvgChain = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    width={width}
+    height={height}
+    className={className}
+    style={style}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M18 32c4-6 10-8 16-8s12 4 16 8"
+      stroke="rgba(255,255,255,0.8)"
+      strokeWidth="3"
+      strokeLinecap="round"
+      fill="none"
+    />
+    <circle cx="18" cy="32" r="3" fill="rgba(255,255,255,0.7)" />
+    <circle cx="46" cy="32" r="3" fill="rgba(255,255,255,0.7)" />
+  </svg>
+);
+
+const SvgDiag = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    width={width}
+    height={height}
+    className={className}
+    style={style}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect
+      x="12"
+      y="16"
+      width="40"
+      height="32"
+      rx="3"
+      fill="rgba(255,255,255,0.6)"
+    />
+    <path
+      d="M20 26h24M20 36h12"
+      stroke="rgba(255,255,255,0.8)"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const SvgLighting = ({
+  className = "",
+  style = {},
+  width = 72,
+  height = 72,
+}) => (
+  <svg
+    viewBox="0 0 64 64"
+    width={width}
+    height={height}
+    className={className}
+    style={style}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path d="M32 8L20 32h12v16l12-24H32V8z" fill="rgba(255,255,255,0.9)" />
+  </svg>
+);
+
+const SvgMusic = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    width={width}
+    height={height}
+    className={className}
+    style={style}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M24 16v32a8 8 0 1 0 8 8V28l16-4v16a8 8 0 1 0 8 8V16L24 16z"
+      fill="rgba(255,255,255,0.9)"
+    />
+  </svg>
+);
+
+const SvgCamera = ({ className = "", style = {}, width = 72, height = 72 }) => (
+  <svg
+    viewBox="0 0 64 64"
+    width={width}
+    height={height}
+    className={className}
+    style={style}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect
+      x="12"
+      y="20"
+      width="40"
+      height="24"
+      rx="4"
+      fill="rgba(255,255,255,0.7)"
+    />
+    <circle cx="40" cy="28" r="4" fill="rgba(255,255,255,0.9)" />
+    <path d="M24 36h16v4H24z" fill="rgba(255,255,255,0.8)" />
+  </svg>
+);
+
+const SvgFallback = ({
+  className = "",
+  style = {},
+  width = 72,
+  height = 72,
+}) => (
+  <svg
+    viewBox="0 0 64 64"
+    width={width}
+    height={height}
+    className={className}
+    style={style}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <rect
+      x="8"
+      y="16"
+      width="48"
+      height="32"
+      rx="6"
+      fill="rgba(255,255,255,0.6)"
+    />
+    <circle cx="32" cy="32" r="8" fill="rgba(255,255,255,0.9)" />
+  </svg>
+);
+
+/* --------------------
+   Icon selection helper
+   -------------------- */
+function getIconForService(serviceTitle) {
+  const s = serviceTitle.toLowerCase();
+
+  if (/(engine|tuning|restoration)/.test(s)) return <SvgEngine />;
+  if (/(clutch|brake|suspension|overhaul)/.test(s)) return <SvgWrench />;
+  if (/(gearbox|gear|transmission)/.test(s)) return <SvgWrench />;
+  if (/(oil|filter|lubric)/.test(s)) return <SvgOil />;
+  if (/(battery|charge|electrical)/.test(s)) return <SvgBattery />;
+  if (/(tyre|tire|wheel|puncture|balanc|alignment)/.test(s)) return <SvgTyre />;
+  if (/(ac|gas refill|air con|air-condition)/.test(s)) return <SvgAC />;
+  if (/(detailing|polish|ceramic|coat|wax|ppf)/.test(s)) return <SvgDetail />;
+  if (/(paint|repaint|denting|painting)/.test(s)) return <SvgPaint />;
+  if (/(chain|sprocket)/.test(s)) return <SvgChain />;
+  if (/(injector|throttle|fuel|carburetor)/.test(s)) return <SvgDiag />;
+  if (/(timing belt|timing|belt)/.test(s)) return <SvgDiag />;
+  if (/(diagnos|sensor|noise|vibration)/.test(s)) return <SvgDiag />;
+  if (/(light|led|illumination|ambient|mood)/.test(s)) return <SvgLighting />;
+  if (/(music|speaker|woofer|sound)/.test(s)) return <SvgMusic />;
+  if (/(camera|sensor|parking)/.test(s)) return <SvgCamera />;
+  if (/(interior|dashboard|seat|steering|upholstery)/.test(s))
+    return <SvgDetail />;
+  // fallback
+  return <SvgFallback />;
+}
 
 const ServicesSection = () => {
+  const [activeTab, setActiveTab] = useState("car");
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+
+  const activeGroups = servicesData[activeTab];
+
+  // Get current category services
+  const currentServices = activeGroups[selectedCategory]?.services.map(
+    (service) => ({
+      category: activeGroups[selectedCategory].category,
+      title: service,
+    })
+  );
+
+  // Section entrance animation
+  const sectionVariants = {
+    hidden: {
+      opacity: 0,
+      y: 100,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1.2,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  // Staggered animations for children
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 60,
+      scale: 0.9,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.23, 1, 0.32, 1],
+      },
+    },
+  };
+
+  const tabVariants = {
+    hidden: {
+      opacity: 0,
+      y: -30,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const categoryTabVariants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <section className="w-full bg-black py-24">
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start gap-10">
-          <div>
-            <p className="text-gray-400 text-sm font-medium">Our Services</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mt-2">
-              Comprehensive <br />
-              <span className="text-red-500">Automotive Solutions</span>
-            </h2>
-          </div>
+    <motion.section
+      className="w-full bg-black py-32 relative overflow-hidden"
+      variants={sectionVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.3 }}
+    >
+      {/* Background Pattern */}
+      <motion.div
+        className="absolute inset-0 opacity-5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05 }}
+        transition={{ duration: 1.5, delay: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-500/5 via-black to-black"></div>
+      </motion.div>
 
-          <p className="max-w-sm text-gray-300 text-sm md:text-base leading-relaxed">
-            From routine maintenance to advanced diagnostics, we’ve got all your
-            automotive needs covered.
-          </p>
-        </div>
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <motion.div variants={tabVariants} className="text-center mb-20">
+          <motion.h2
+            className="text-5xl md:text-7xl font-black text-white mb-6"
+            variants={tabVariants}
+          >
+            Our <span className="text-red-500">Services</span>
+          </motion.h2>
+          <motion.p
+            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            variants={tabVariants}
+          >
+            Premium automotive care with cutting-edge technology and expert
+            craftsmanship
+          </motion.p>
+        </motion.div>
 
-        {/* Cards */}
+        {/* Main Tab Navigation - Car/Bike */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mt-16"
-          variants={parentVariant}
-          initial="hidden"
-          whileInView="visible"
-          exit="hidden"
-          viewport={{ once: false, amount: 0.25 }}
+          className="flex justify-center mb-12"
+          variants={tabVariants}
         >
-          {services.map((service) => (
-            <motion.div
-              key={service.id}
-              variants={cardVariant}
-              whileHover={{ y: -10, scale: 1.03 }}
-              className="
-      relative rounded-xl overflow-hidden cursor-pointer
-      bg-black border border-gray-800
-      shadow-md shadow-black/40
-      transition-all duration-500 group
-    "
-            >
-              {/* ✅ FULL IMAGE */}
-              <img
-                src={service.image}
-                alt={service.title}
-                className="
-        w-full h-64 object-cover
-        group-hover:scale-110 transition-transform duration-700
-      "
-              />
-
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/85"></div>
-
-              {/* Service ID */}
-              <span className="absolute top-4 left-4 text-gray-300 font-semibold text-sm tracking-wide">
-                {service.id}
-              </span>
-
-              {/* Title */}
-              <h3
-                className="
-        absolute bottom-4 left-4 
-        text-white text-lg font-semibold 
-        transition-colors duration-300
-        group-hover:text-red-500
-      "
+          <div className="inline-flex items-center gap-2 p-2 bg-black/50 border border-red-900/50 rounded-2xl backdrop-blur-sm">
+            {["car", "bike"].map((tab) => (
+              <motion.button
+                key={tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setSelectedCategory(0);
+                }}
+                className={`relative px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
+                  activeTab === tab
+                    ? "text-white"
+                    : "text-gray-500 hover:text-gray-300"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {service.title}
-              </h3>
-            </motion.div>
-          ))}
+                {activeTab === tab && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-xl"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">
+                  {tab === "car" ? "Car Services" : "Bike Services"}
+                </span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+        {activeGroups?.length > 0 && (
+          <motion.div
+            className="flex justify-center mb-12 flex-wrap gap-4"
+            variants={containerVariants}
+            key={activeTab}
+          >
+            {activeGroups.map((group, index) => (
+              <motion.button
+                key={group.category}
+                variants={categoryTabVariants}
+                onClick={() => setSelectedCategory(index)}
+                className={`px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 min-w-[200px] text-center ${
+                  selectedCategory === index
+                    ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-2xl shadow-red-500/40"
+                    : "bg-gray-900/80 text-gray-300 hover:bg-gray-800 hover:text-white border border-gray-700"
+                }`}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow:
+                    selectedCategory !== index
+                      ? "0 10px 30px -10px rgba(220, 38, 38, 0.3)"
+                      : "none",
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {group.category.split(" ")[0]} {group.category.split(" ")[1]}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Services Grid */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          variants={containerVariants}
+        >
+          <AnimatePresence mode="wait">
+            {currentServices.map((service, index) => {
+              const icon = getIconForService(service.title);
+
+              return (
+                <motion.div
+                  key={`${activeTab}-${service.title}-${index}`}
+                  variants={cardVariants}
+                  layout
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  whileHover={{
+                    y: -8,
+                    scale: 1.02,
+                    transition: { duration: 0.3 },
+                  }}
+                  onHoverStart={() => setHoveredCard(index)}
+                  onHoverEnd={() => setHoveredCard(null)}
+                  className="relative group cursor-pointer"
+                >
+                  {/* Animated Border */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm group-hover:blur-0"></div>
+
+                  <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl p-6 border border-gray-800 group-hover:border-red-500/50 transition-all duration-300 h-full overflow-hidden">
+                    {/* Hover Effect Overlay */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent opacity-0 group-hover:opacity-100"
+                      initial={false}
+                      animate={{
+                        opacity: hoveredCard === index ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+
+                    {/* Animated Background Icon */}
+                    <motion.div
+                      className="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity duration-500"
+                      animate={{
+                        rotate: hoveredCard === index ? 5 : 0,
+                        scale: hoveredCard === index ? 1.1 : 1,
+                      }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {React.cloneElement(icon, { width: 120, height: 120 })}
+                    </motion.div>
+
+                    {/* Content */}
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-4 mb-4">
+                        <motion.div
+                          className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-500/20"
+                          whileHover={{
+                            scale: 1.1,
+                            rotate: 5,
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {/* White icon on red background */}
+                          {React.cloneElement(icon, {
+                            width: 24,
+                            height: 24,
+                          })}
+                        </motion.div>
+
+                        <motion.h3
+                          className="text-white font-bold text-lg leading-tight flex-1"
+                          initial={false}
+                          animate={{
+                            color:
+                              hoveredCard === index ? "#fecaca" : "#ffffff",
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {service.title}
+                        </motion.h3>
+                      </div>
+
+                      <motion.span
+                        className="text-red-400 text-xs font-semibold tracking-wider uppercase block mt-2"
+                        initial={false}
+                        animate={{
+                          color: hoveredCard === index ? "#f87171" : "#f87171",
+                        }}
+                      >
+                        {service.category}
+                      </motion.span>
+
+                      {/* Hover Arrow */}
+                      <motion.div
+                        className="absolute top-6 right-6 text-red-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300"
+                        initial={false}
+                        animate={{
+                          opacity: hoveredCard === index ? 1 : 0,
+                          x: hoveredCard === index ? 0 : 8,
+                        }}
+                      >
+                        →
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* CTA Button */}
+        <motion.div className="text-center mt-16" variants={tabVariants}>
+          <motion.button
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 20px 40px -10px rgba(220, 38, 38, 0.4)",
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="px-12 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl border border-red-500/30 relative overflow-hidden group"
+          >
+            <span className="relative z-10">VIEW ALL SERVICES</span>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: 0 }}
+              transition={{ duration: 0.4 }}
+            />
+          </motion.button>
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
