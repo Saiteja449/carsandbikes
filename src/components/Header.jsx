@@ -123,7 +123,7 @@ const Header = () => {
 
         {/* Desktop Menu - Using modern font */}
         <motion.ul
-          className="hidden md:flex gap-8 text-white font-modern font-medium text-base lg:text-lg"
+          className="hidden md:flex gap-4 text-white font-modern font-medium text-base lg:text-lg"
           variants={containerVariants}
           initial="hidden"
           animate="visible"

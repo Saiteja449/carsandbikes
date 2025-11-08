@@ -138,8 +138,9 @@ export const servicesData = {
 };
 
 /* --------------------
-   Detailed SVG icons - WHITE COLOR
+   Detailed SVG icons - WHITE COLOR - **REDUCED DEFAULT SIZES**
    -------------------- */
+// NOTE: I've kept the default sizes large but will rely on the passed-in props (w-12, w-24, w-30, etc.) for responsive sizing.
 const SvgEngine = ({ className = "", style = {}, width = 76, height = 76 }) => (
   <svg
     viewBox="0 0 64 64"
@@ -579,9 +580,9 @@ const ServicesSection = () => {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   const categoryTabVariants = {
@@ -596,26 +597,26 @@ const ServicesSection = () => {
       scale: 1,
       transition: {
         duration: 0.4,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   // Function to handle View More click
   const handleViewMore = () => {
     // Navigate to all services page with current category info
-    navigate('/all-services', { 
-      state: { 
-        activeTab, 
+    navigate("/all-services", {
+      state: {
+        activeTab,
         selectedCategory,
-        categoryName: activeGroups[selectedCategory]?.category 
-      } 
+        categoryName: activeGroups[selectedCategory]?.category,
+      },
     });
   };
 
   return (
     <motion.section
-      className="w-full bg-black py-32 relative overflow-hidden"
+      className="w-full bg-black py-20 md:py-32 relative overflow-hidden" // **UPDATED: py-20 for mobile, py-32 for md+**
       variants={sectionVariants}
       initial="hidden"
       whileInView="visible"
@@ -632,29 +633,30 @@ const ServicesSection = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-500/5 via-black to-black"></div>
       </motion.div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div variants={tabVariants} className="text-center mb-20">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10"> {/* **UPDATED: px-4 for small screens** */}
+        {/* Section Header - Title and Subtitle */}
+        <motion.div variants={tabVariants} className="text-center mb-16 md:mb-20"> {/* **UPDATED: mb-16 for tighter spacing on mobile** */}
           <motion.h2
-            className="text-5xl md:text-7xl font-tech font-black text-white mb-6"
+            className="text-4xl sm:text-5xl md:text-7xl font-tech font-black text-white mb-4 md:mb-6" // **UPDATED: Responsive font size**
             variants={tabVariants}
           >
             Our <span className="text-red-500">Services</span>
           </motion.h2>
           <motion.p
-            className="text-xl font-modern text-gray-400 max-w-2xl mx-auto"
+            className="text-base sm:text-lg font-modern text-gray-400 max-w-2xl mx-auto" // **UPDATED: Responsive font size**
             variants={tabVariants}
           >
-            Premium automotive care with cutting-edge technology and expert craftsmanship
+            Premium automotive care with cutting-edge technology and expert
+            craftsmanship
           </motion.p>
         </motion.div>
 
         {/* Main Tab Navigation - Car/Bike */}
         <motion.div
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-8 md:mb-12" // **UPDATED: Reduced margin on mobile**
           variants={tabVariants}
         >
-          <div className="inline-flex items-center gap-2 p-2 bg-black/50 border border-red-900/50 rounded-2xl backdrop-blur-sm">
+          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-2 bg-black/50 border border-red-900/50 rounded-xl sm:rounded-2xl backdrop-blur-sm"> {/* **UPDATED: smaller gap/padding on mobile** */}
             {["car", "bike"].map((tab) => (
               <motion.button
                 key={tab}
@@ -662,7 +664,7 @@ const ServicesSection = () => {
                   setActiveTab(tab);
                   setSelectedCategory(0);
                 }}
-                className={`relative px-8 py-4 rounded-xl font-industrial font-bold text-sm uppercase tracking-wider transition-all duration-300 ${
+                className={`relative px-4 sm:px-8 py-2 sm:py-4 rounded-lg sm:rounded-xl font-industrial font-bold text-sm sm:text-sm uppercase tracking-wider transition-all duration-300 ${ // **UPDATED: smaller padding/font on mobile**
                   activeTab === tab
                     ? "text-white"
                     : "text-gray-500 hover:text-gray-300"
@@ -673,7 +675,7 @@ const ServicesSection = () => {
                 {activeTab === tab && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-xl"
+                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-lg sm:rounded-xl" // **UPDATED: rounded size**
                     initial={false}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
@@ -686,40 +688,48 @@ const ServicesSection = () => {
           </div>
         </motion.div>
 
-        {activeGroups?.length > 0 && (
-          <motion.div
-            className="flex justify-center mb-12 flex-wrap gap-4"
-            variants={containerVariants}
-            key={activeTab}
-          >
-            {activeGroups.map((group, index) => (
-              <motion.button
-                key={group.category}
-                variants={categoryTabVariants}
-                onClick={() => setSelectedCategory(index)}
-                className={`px-8 py-4 rounded-xl font-industrial font-semibold text-base transition-all duration-300 min-w-[200px] text-center ${
-                  selectedCategory === index
-                    ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-2xl shadow-red-500/40"
-                    : "bg-gray-900/80 text-gray-300 hover:bg-gray-800 hover:text-white border border-gray-700"
-                }`}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow:
-                    selectedCategory !== index
-                      ? "0 10px 30px -10px rgba(220, 38, 38, 0.3)"
-                      : "none",
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {group.category.split(" ")[0]} {group.category.split(" ")[1]}
-              </motion.button>
-            ))}
-          </motion.div>
-        )}
+        {/* Category Tabs */}
+        <AnimatePresence mode="wait">
+          {activeGroups?.length > 0 && (
+            <motion.div
+              key={`categories-${activeTab}`}
+              className="flex justify-center mb-8 md:mb-12 flex-wrap gap-2 md:gap-4" // **UPDATED: smaller gap on mobile**
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              transition={{ duration: 0.4 }}
+            >
+              {activeGroups.map((group, index) => (
+                <motion.button
+                  key={`${activeTab}-${index}`}
+                  variants={categoryTabVariants}
+                  onClick={() => setSelectedCategory(index)}
+                  className={`px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-industrial font-semibold text-sm sm:text-base transition-all duration-300 min-w-[150px] sm:min-w-[200px] text-center ${ // **UPDATED: smaller padding/font/min-width on mobile**
+                    selectedCategory === index
+                      ? "bg-gradient-to-r from-red-600 to-red-700 text-white shadow-xl shadow-red-500/30" // **UPDATED: reduced shadow intensity**
+                      : "bg-gray-900/80 text-gray-300 hover:bg-gray-800 hover:text-white border border-gray-700"
+                  }`}
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow:
+                      selectedCategory !== index
+                        ? "0 10px 30px -10px rgba(220, 38, 38, 0.3)"
+                        : "none",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {/* Clean up category label for tab: show first two words or full category if shorter */}
+                  {group.category.split(" ").slice(0, 2).join(" ") + (group.category.split(" ").length > 2 ? '...' : '')}
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Services Grid - Limited to 8 services */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" // **UPDATED: grid layout for small screens, gap sizing**
           variants={containerVariants}
         >
           <AnimatePresence mode="wait">
@@ -735,18 +745,18 @@ const ServicesSection = () => {
                   animate="visible"
                   exit="hidden"
                   whileHover={{
-                    y: -8,
+                    y: -6, // **UPDATED: slightly less lift**
                     scale: 1.02,
                     transition: { duration: 0.3 },
                   }}
                   onHoverStart={() => setHoveredCard(index)}
                   onHoverEnd={() => setHoveredCard(null)}
-                  className="relative group cursor-pointer"
+                  className="relative group cursor-pointer serviceCard"
                 >
                   {/* Animated Border */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm group-hover:blur-0"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm group-hover:blur-0"></div> {/* **UPDATED: rounded size** */}
 
-                  <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl p-6 border border-gray-800 group-hover:border-red-500/50 transition-all duration-300 h-full overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-800 group-hover:border-red-500/50 transition-all duration-300 h-full overflow-hidden"> {/* **UPDATED: padding/rounded size** */}
                     {/* Hover Effect Overlay */}
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-transparent opacity-0 group-hover:opacity-100"
@@ -759,21 +769,22 @@ const ServicesSection = () => {
 
                     {/* Animated Background Icon */}
                     <motion.div
-                      className="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity duration-500"
+                      className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 transition-opacity duration-500" // **UPDATED: icon position**
                       animate={{
                         rotate: hoveredCard === index ? 5 : 0,
                         scale: hoveredCard === index ? 1.1 : 1,
                       }}
                       transition={{ duration: 0.5 }}
                     >
-                      {React.cloneElement(icon, { width: 120, height: 120 })}
+                      {/* **UPDATED: Responsive Icon Size** */}
+                      {React.cloneElement(icon, { width: 100, height: 100 })} 
                     </motion.div>
 
                     {/* Content */}
                     <div className="relative z-10">
-                      <div className="flex items-center gap-4 mb-4">
+                      <div className="flex items-start gap-3 sm:gap-4 mb-2 sm:mb-4"> {/* **UPDATED: smaller gap/margin on mobile** */}
                         <motion.div
-                          className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-500/20"
+                          className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-red-600 to-red-700 shadow-lg shadow-red-500/20" // **UPDATED: icon container size/rounded**
                           whileHover={{
                             scale: 1.1,
                             rotate: 5,
@@ -781,14 +792,16 @@ const ServicesSection = () => {
                           transition={{ duration: 0.3 }}
                         >
                           {/* White icon on red background */}
+                          {/* **UPDATED: Responsive Icon Size** */}
                           {React.cloneElement(icon, {
-                            width: 24,
-                            height: 24,
+                            width: 20, // 20px on mobile
+                            height: 20,
+                            className: "sm:w-6 sm:h-6" // 24px on sm+
                           })}
                         </motion.div>
 
                         <motion.h3
-                          className="text-white font-modern font-bold text-lg leading-tight flex-1"
+                          className="text-white font-modern font-bold text-base sm:text-lg leading-snug flex-1 pt-0.5" // **UPDATED: Responsive font size**
                           initial={false}
                           animate={{
                             color:
@@ -801,7 +814,7 @@ const ServicesSection = () => {
                       </div>
 
                       <motion.span
-                        className="text-red-400 font-industrial text-xs font-semibold tracking-wider uppercase block mt-2"
+                        className="text-red-400 font-industrial text-2xs sm:text-xs font-semibold tracking-wider uppercase block mt-1 sm:mt-2" // **UPDATED: Responsive font size**
                         initial={false}
                         animate={{
                           color: hoveredCard === index ? "#f87171" : "#f87171",
@@ -812,7 +825,7 @@ const ServicesSection = () => {
 
                       {/* Hover Arrow */}
                       <motion.div
-                        className="absolute top-6 right-6 text-red-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300"
+                        className="absolute top-4 right-4 sm:top-6 sm:right-6 text-red-500 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" // **UPDATED: arrow position**
                         initial={false}
                         animate={{
                           opacity: hoveredCard === index ? 1 : 0,
@@ -831,7 +844,7 @@ const ServicesSection = () => {
 
         {/* View More Button - Only show if there are more services */}
         {hasMoreServices && (
-          <motion.div className="text-center mt-12" variants={tabVariants}>
+          <motion.div className="text-center mt-8 md:mt-12" variants={tabVariants}> {/* **UPDATED: margin** */}
             <motion.button
               onClick={handleViewMore}
               whileHover={{
@@ -839,7 +852,7 @@ const ServicesSection = () => {
                 boxShadow: "0 20px 40px -10px rgba(220, 38, 38, 0.4)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="px-12 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-industrial font-bold rounded-xl border border-red-500/30 relative overflow-hidden group"
+              className="px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-industrial text-sm sm:text-base font-bold rounded-xl border border-red-500/30 relative overflow-hidden group" // **UPDATED: padding/font size**
             >
               <span className="relative z-10">VIEW MORE SERVICES</span>
               <motion.div
@@ -853,16 +866,16 @@ const ServicesSection = () => {
         )}
 
         {/* CTA Button */}
-        <motion.div className="text-center mt-8" variants={tabVariants}>
+        <motion.div className="text-center mt-6 md:mt-8" variants={tabVariants}> {/* **UPDATED: margin** */}
           <motion.button
             whileHover={{
               scale: 1.05,
               boxShadow: "0 20px 40px -10px rgba(220, 38, 38, 0.4)",
             }}
             whileTap={{ scale: 0.95 }}
-            className="px-12 py-4 bg-transparent text-white font-industrial font-bold rounded-xl border-2 border-red-500 hover:bg-red-500 transition-all duration-300"
+            className="px-8 sm:px-12 py-3 sm:py-4 bg-transparent text-white font-industrial text-sm sm:text-base font-bold rounded-xl border-2 border-red-500 hover:bg-red-500 transition-all duration-300" // **UPDATED: padding/font size**
           >
-            <span className="relative z-10">BOOK APPOINTMENT</span>
+            <span className="relative z-10 buttonText">BOOK APPOINTMENT</span>
           </motion.button>
         </motion.div>
       </div>

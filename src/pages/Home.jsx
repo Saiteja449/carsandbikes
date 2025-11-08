@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import bgCar from "../../assets/homeBanner.jpg";
 import ServicesSection from "../components/ServicesSection";
 import WhyChooseUs from "../components/WhyChooseUs";
+import WhatToExpect from "../components/WhatToExpect";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -233,7 +234,7 @@ const Home = () => {
         </motion.div>
       </motion.section>
 
-      {/* Services Section with instant animation */}
+      {/* Services Section */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -243,7 +244,17 @@ const Home = () => {
         <ServicesSection />
       </motion.div>
 
-      {/* WhyChooseUs Section with instant animation */}
+      {/* What to Expect Section */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: false, amount: 0.1 }}
+      >
+        <WhatToExpect />
+      </motion.div>
+
+      {/* Why Choose Us Section */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
