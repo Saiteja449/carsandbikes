@@ -12,6 +12,7 @@ import AboutUs from "./pages/AboutUs";
 import ViewAllServices from "./pages/ViewAllServices";
 import Footer from "./components/Footer";
 import WhatsAppFloat from "./components/WhatsappFloat";
+import BookNowForm from "./pages/BookNowForm";
 
 // ScrollToTop component that will scroll to top on route change
 const ScrollToTop = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/services" element={<ViewAllServices />} />
+          <Route path="/booknow" element={<BookNowForm />} />
         </Routes>
         <Footer />
         <WhatsAppFloat />

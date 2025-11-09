@@ -6,6 +6,7 @@ import WhyChooseUs from "../components/WhyChooseUs";
 import WhatToExpect from "../components/WhatToExpect";
 import GetInTouch from "../components/GetInTouch";
 import LocationSelector from "../components/LocationSelector";
+import { Link } from "react-router-dom";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -184,20 +185,22 @@ const Home = () => {
               variants={textVariants}
               className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start"
             >
-              <motion.button
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                className="relative px-12 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-industrial font-bold text-lg rounded-xl overflow-hidden group"
-              >
-                <span className="relative z-10">Appointment Now</span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.2 }}
-                />
-              </motion.button>
+              <Link to="/booknow">
+                <motion.button
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="relative px-12 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-industrial font-bold text-lg rounded-xl overflow-hidden group"
+                >
+                  <span className="relative z-10">Appointment Now</span>
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800"
+                    initial={{ x: "-100%" }}
+                    whileHover={{ x: 0 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </motion.button>
+              </Link>
 
               <motion.button
                 variants={buttonVariants}
