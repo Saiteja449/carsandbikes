@@ -52,7 +52,7 @@ export const servicesData = {
       services: [
         "PPF (Paint Protection Film) – 3 years warranty",
         "Borophene, graphene & ceramic coating – 3 years warranty",
-        "Teflon coating for engine silencer & full body",
+        "Teflon coating for engine silencer & full body", //pending
         "Full body detailing & coating",
       ],
     },
